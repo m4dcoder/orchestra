@@ -18,6 +18,10 @@ VENV_DIR ?= .venv
 # Extract ST2 pip version so can use same version in orquesta
 ST2_BRANCH := $(shell echo $${ST2_BRANCH:-$${CIRCLE_BRANCH:-master}})
 PIP_VERSION := $(shell curl --silent https://raw.githubusercontent.com/StackStorm/st2/$(ST2_BRANCH)/Makefile | grep 'PIP_VERSION ?= ' | awk '{ print $$3 }')
+ifeq ($(PIP_VERSION),)
+	ST2_BRANCH := master
+	PIP_VERSION := $(shell curl --silent https://raw.githubusercontent.com/StackStorm/st2/$(ST2_BRANCH)/Makefile | grep 'PIP_VERSION ?= ' | awk '{ print $$3 }')
+endif
 
 # Tox Environment
 TOX_DIR ?= .tox
