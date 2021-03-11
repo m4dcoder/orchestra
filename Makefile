@@ -15,6 +15,10 @@ PY3 := $(shell which python3)
 # Virtual Environment
 VENV_DIR ?= .venv
 
+# Extract ST2 pip version so can use same version in orquesta
+ST2_BRANCH := $(shell echo $${ST2_BRANCH:-$${CIRCLE_BRANCH:-master}})
+PIP_VERSION := $(shell curl --silent https://raw.githubusercontent.com/StackStorm/st2/$(ST2_BRANCH)/Makefile | grep 'PIP_VERSION ?= ' | awk '{ print $$3 }')
+
 # Tox Environment
 TOX_DIR ?= .tox
 
@@ -44,7 +48,9 @@ venv:
 
 .PHONY: reqs
 reqs: venv
-	$(VENV_DIR)/bin/pip install --upgrade "pip==20.3.3"
+
+	@echo "Upgrade to pip version $(PIP_VERSION)"
+	$(VENV_DIR)/bin/pip install --upgrade "pip==$(PIP_VERSION)"
 	$(VENV_DIR)/bin/pip install -r requirements.txt
 	$(VENV_DIR)/bin/pip install -r requirements-test.txt
 	$(VENV_DIR)/bin/pip install -r requirements-docs.txt
