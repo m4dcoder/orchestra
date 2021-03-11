@@ -9,6 +9,8 @@ Changed
 
 * Migrate from Travis to Github Actions. (improvement)
 
+* Upgrade to pip 20.3.3
+
 Fixed
 ~~~~~
 
